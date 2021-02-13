@@ -1,0 +1,28 @@
+.Join-header {
+  width: 100%;
+  margin: 1em 0;
+}
+  .Join-header h1 {
+    text-align: center;
+    margin: 0;
+  }
+
+#joinForm {
+  margin: auto;
+  padding: 1em;
+  max-width: 360px;
+}
+
+#roomCodeInput, #nameInput {
+  height: 40px;
+  font-size: 24px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+#joinBtn {
+  width: 100%;
+  font-size: 24px;
+  font-weight: 600;
+  border-radius: 7px;
+}
