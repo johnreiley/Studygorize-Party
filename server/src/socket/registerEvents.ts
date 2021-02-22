@@ -68,6 +68,31 @@ export default function registerEvents(io: any, socket: Socket) {
   });
 
   /*******************************
+   * QUESTION LOADING
+   *******************************/
+  socket.on('questionLoading', () => {});
+
+  /*******************************
+   * SHOW OPTIONS
+   *******************************/
+  socket.on('showOptions', (count: number) => {})
+
+  /*******************************
+   * SELECT OPTION
+   *******************************/
+  socket.on('selectOption', (value: number) => {})
+
+  /*******************************
+   * QUESTION RESULT
+   *******************************/
+  socket.on('questionResult', (isCorrect: boolean, score: number) => {})
+
+  /*******************************
+   * PARTY RESULTS
+   *******************************/
+  socket.on('partyResults', () => {})
+
+  /*******************************
    * DISCONNECT
    *******************************/
   socket.on('disconnect', () => {
