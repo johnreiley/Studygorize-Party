@@ -26,15 +26,12 @@ export default function registerEvents(io: any, socket: Socket) {
     parties[partyId] = {
       host: { uuid },
       users: [],
-      state: {
-        page: Page.WaitingRoom.toString(),
-        data: null
-      }
+      state: PartyState.WaitingRoom
     }
 
     uuidPartyIdDictionary[uuid] = partyId;
     socket.join(partyId);
-    socket.join(uuid); // TODO: figure out how a client will communicate directly with the host...!!!
+    socket.join(uuid);
     socket.emit('partyCreated', { partyId });
   });
 
