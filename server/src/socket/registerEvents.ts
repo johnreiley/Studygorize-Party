@@ -1,7 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import randomize from 'randomatic';
-import { Socket } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import Party from '../models/Party';
+import { assert, exception } from 'console';
 
 // the partyId is the dictionary key
 const parties: Record<string, Party> = {};
@@ -10,11 +11,12 @@ const parties: Record<string, Party> = {};
 // which party a uuid is associated with.
 // uuid is the key, partyId is the value
 const uuidPartyIdDictionary: Record<string, string> = {};
+const socketIdPartyIdDictionary: Record<string, string> = {};
 
-export default function registerEvents(io: any, socket: Socket) {
+export default function registerEvents(io: Server, socket: Socket) {
 
   /******************************
-   * CREATE PARTY
+   * CREATE PARTY: from Host
    ******************************/
   socket.on('createParty', () => {
     const uuid = uuidv4();
@@ -29,14 +31,15 @@ export default function registerEvents(io: any, socket: Socket) {
       state: PartyState.WaitingRoom
     }
 
-    uuidPartyIdDictionary[uuid] = partyId;
+    // uuidPartyIdDictionary[uuid] = partyId;
+    socketIdPartyIdDictionary[socket.id] = partyId;
     socket.join(partyId);
     socket.join(uuid);
     socket.emit('partyCreated', { partyId });
   });
 
   /*******************************
-   * JOIN PARTY
+   * JOIN PARTY: from Client
    *******************************/
   socket.on('joinParty', ({ name, partyId }) => {
     name = name.toUpperCase();
@@ -54,40 +57,95 @@ export default function registerEvents(io: any, socket: Socket) {
     const user = {
       uuid: uuidv4(),
       socketId: socket.id,
-      name
+      name,
+      score: 0
     }
     parties[partyId].users.push(user);
 
-    uuidPartyIdDictionary[user.uuid] = partyId;
+    // uuidPartyIdDictionary[user.uuid] = partyId;
+    socketIdPartyIdDictionary[socket.id] = partyId;
     socket.join(partyId);
     socket.emit('partyJoined', { partyId, uuid: user.uuid })
     socket.broadcast.to(parties[partyId].host.uuid).emit('userJoined', user);
   });
 
   /*******************************
-   * QUESTION LOADING
+   * QUESTION LOADING: from Host
    *******************************/
-  socket.on('questionLoading', () => {});
+  socket.on('questionLoading', () => {
+    let partyId = socketIdPartyIdDictionary[socket.id];
+    if (partyId) {
+      parties[partyId].state = PartyState.QuestionLoading;
+      socket.to(partyId).emit('questionLoading');
+    } else {
+      // to be taken out after testing
+      throw exception('ERROR: HOST HAD NO SOCKET ID ENTRY IN socketIdPartyIdDictionary!');
+    }
+  });
 
   /*******************************
-   * SHOW OPTIONS
+   * SHOW OPTIONS: from Host
    *******************************/
-  socket.on('showOptions', (count: number) => {})
+  socket.on('showOptions', (count: number) => {
+    let partyId = socketIdPartyIdDictionary[socket.id];
+    if (partyId) {
+      parties[partyId].state = PartyState.ShowOptions;
+      socket.to(partyId).emit('showOptions', count);
+    } else {
+      // to be taken out after testing
+      throw exception('ERROR: HOST HAD NO SOCKET ID ENTRY IN socketIdPartyIdDictionary!');
+    }
+  })
 
   /*******************************
-   * SELECT OPTION
+   * SELECT OPTION: from Client
    *******************************/
-  socket.on('selectOption', (value: number) => {})
+  socket.on('selectOption', (value: number) => {
+    // find host uuid
+    let partyId = socketIdPartyIdDictionary[socket.id];
+    if (partyId && parties[partyId]) {
+      let hostUuid = parties[partyId].host.uuid;
+      let clientUuid = parties[partyId].users.find(u => u.socketId === socket.id).uuid;
+      if (hostUuid) {
+        // send the selection to the host
+        socket.to(hostUuid).emit('selectOption', { uuid: clientUuid, value });
+      }
+    }
+  })
 
   /*******************************
-   * QUESTION RESULT
+   * QUESTION RESULT: from Host
    *******************************/
-  socket.on('questionResult', (isCorrect: boolean, score: number) => {})
+  socket.on('questionResult', ({ uuid, isCorrect, score }) => {
+    let partyId = socketIdPartyIdDictionary[socket.id];
+    if (partyId) {
+      parties[partyId].state = PartyState.QuestionResult;
+      // find the user to send to
+      let user = parties[partyId].users.find(u => u.uuid === uuid);
+      io.to(user.socketId).emit('questionResult', { isCorrect, score });
+      // update the current user's score
+      user.score = score;
+    } else {
+      // to be taken out after testing
+      throw exception('ERROR: HOST HAD NO SOCKET ID ENTRY IN socketIdPartyIdDictionary!');
+    }
+  })
 
   /*******************************
-   * PARTY RESULTS
+   * PARTY RESULTS: from Host
    *******************************/
-  socket.on('partyResults', () => {})
+  socket.on('partyResults', () => {
+    let partyId = socketIdPartyIdDictionary[socket.id];
+    if (partyId) {
+      parties[partyId].state = PartyState.PartyResults;
+      parties[partyId].users.forEach(u => {
+        io.to(u.uuid).emit('partyResults', u.score);
+      });
+    } else {
+      // to be taken out after testing
+      throw exception('ERROR: HOST HAD NO SOCKET ID ENTRY IN socketIdPartyIdDictionary!');
+    }
+  })
 
   /*******************************
    * DISCONNECT
