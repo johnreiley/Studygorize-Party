@@ -1,8 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
 import randomize from 'randomatic';
 import { Server, Socket } from 'socket.io';
-import Party from '../models/Party';
+import Party from '../models/Party.model';
 import { assert, exception } from 'console';
+import { PartyState } from '../models/PartyState.enum';
 
 // the partyId is the dictionary key
 const parties: Record<string, Party> = {};
@@ -19,6 +20,8 @@ export default function registerEvents(io: Server, socket: Socket) {
    * CREATE PARTY: from Host
    ******************************/
   socket.on('createParty', () => {
+    console.log("create a party!!!");
+
     const uuid = uuidv4();
     let partyId = randomize('A', 4);
     // make sure the id is unique

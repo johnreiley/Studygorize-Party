@@ -3,15 +3,19 @@ import { Request, Response } from "express";
 import express from 'express';
 import path from 'path';
 import registerEvents from './socket/registerEvents';
+let OPTIONS = {}
 
 const app = express();
 const http = require('http').createServer(app);
-const io = new Server(http);
-
 if (process.env.NODE_ENV !== 'production') {
-  let cors = require('cors');
-  app.use(cors());
+  OPTIONS = {
+    cors: {
+      origin: "http://localhost:4200",
+      methods: ["GET", "POST"]
+    }
+  };
 }
+const io = new Server(http, OPTIONS);
 
 app.use('/static', express.static(path.join(__dirname, '../../client/build//static')));
 app.get('*', (req: Request, res: Response) => {
