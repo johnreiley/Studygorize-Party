@@ -1,0 +1,20 @@
+.NameScorePanel-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  padding: 1em;
+  font-weight: bold;
+  animation: slideInFromBottom 0.5s cubic-bezier(.27,.11,.38,.97);
+}
+
+@keyframes slideInFromBottom {
+  0% {
+    transform: translateY(100%);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}

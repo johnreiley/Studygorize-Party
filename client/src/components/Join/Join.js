@@ -1,12 +1,27 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Join.css';
 import Socket from '../../services/SocketService';
+import LocalStorageService from '../../services/LocalStorageService';
 
-function Join() {
-  const [partyCode, setPartyCode] = useState();
-  const [name, setName] = useState();
+function Join(props) {
+  const [partyCode, setPartyCode] = useState(props.partyId);
+  const [name, setName] = useState(props.name);
   const [showCodeWarning, setShowCodeWarning] = useState();
   const [showNameWarning, setShowNameWarning] = useState();
+
+  useEffect(() => {
+    Socket.on('partyNotExist', () => {
+      // show warning
+    });
+    Socket.on('nameTaken', () => {
+      // show warning
+    });
+
+    return () => {
+      Socket.off('partyNotExist');
+      Socket.off('nameTaken');
+    }
+  }, []);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -20,12 +35,15 @@ function Join() {
       valid = false;
     }
     if (valid) {
-      Socket.emit('joinParty', { name, partyId: partyCode })
+      Socket.emit('joinParty', { name, partyId: partyCode });
+      LocalStorageService.setItem('name', name);
+      props.emitName(name);
+      props.emitPartyId(partyCode);
     }
   }
 
   return (
-    <>
+    <div className="Join-container">
       <div className="row">
         <div className="Join-header">
           <h1 className="theme-font text-light">Studygorize Party</h1>
@@ -36,6 +54,7 @@ function Join() {
           <div className="form-group">
             <label htmlFor="partyCodeInput" className="text-light">Party Code</label>
             <input onChange={e => setPartyCode(e.target.value)} 
+              value={partyCode}
               type="text" 
               id="partyCodeInput" 
               className="form-control text-uppercase" 
@@ -52,6 +71,7 @@ function Join() {
           <div className="form-group">
             <label htmlFor="nameInput" className="text-light">Name</label>
             <input onChange={e => setName(e.target.value)} 
+              value={name}
               type="text" 
               id="nameInput" 
               className="form-control" 
@@ -74,7 +94,7 @@ function Join() {
           <strong><a className="text-light" href="https://studygorize.web.app" target="_blank"> studygorize.web.app</a></strong>
         </footer>
       </div>
-    </>
+    </div>
   )
 }
 
