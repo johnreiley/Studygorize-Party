@@ -28,11 +28,10 @@ function App() {
       console.log(`Party ${partyId} joined!`)
     })
 
-
-
     Socket.on('disconnect', () => {
       console.log('DISCONNECTED');
       setIsConnected(false);
+      setPartyId(LocalStorageService.getItem('partyId'));
       setView(initView);
       Socket.connect();
     })

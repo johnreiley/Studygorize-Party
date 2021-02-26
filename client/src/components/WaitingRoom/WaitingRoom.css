@@ -4,5 +4,5 @@
   width: 100%;
   height: fit-content;
   margin-top: 30vh;
-  animation: growAndFadeIn 0.5s cubic-bezier(.27,.11,.38,.97);
+  animation: growAndFadeIn 0.3s;
 }

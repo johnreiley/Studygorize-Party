@@ -6,7 +6,7 @@
   background-color: white;
   padding: 1em;
   font-weight: bold;
-  animation: slideInFromBottom 0.5s cubic-bezier(.27,.11,.38,.97);
+  animation: slideInFromBottom 0.3s;
 }
 
 @keyframes slideInFromBottom {
