@@ -1,0 +1,15 @@
+.QuestionLoading-container {
+  color: white;
+  text-align: center;
+  width: 100%;
+  height: fit-content;
+  margin-top: 30vh;
+}
+
+.spinner-border {
+  width: 4em;
+  height: 4em;
+  /* animation: spinner-border 2s linear infinite; */
+  animation-duration: 2s;
+  border-width: 0.8em;
+}

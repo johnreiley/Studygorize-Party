@@ -6,6 +6,7 @@ import Join from './components/Join/Join';
 import WaitingRoom from './components/WaitingRoom/WaitingRoom';
 import QuitBtn from './components/QuitBtn/QuitBtn';
 import NameScorePanel from './components/NameScorePanel/NameScorePanel';
+import QuestionLoading from './components/QuestionLoading/QuestionLoading';
 
 
 function App() {

@@ -1,7 +1,12 @@
+import './QuestionLoading.css';
+
 function QuestionLoading() {
   return (
-    <div>
-      
+    <div className="QuestionLoading-container">
+      <div className="spinner-border mb-2" role="status">
+        <span className="sr-only">Loading...</span>
+      </div>
+      <h3 className="text-light">Get Ready!</h3>
     </div>
   )
 }
