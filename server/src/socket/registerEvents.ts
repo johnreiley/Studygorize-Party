@@ -154,7 +154,7 @@ export default function registerEvents(io: Server, socket: Socket) {
    *******************************/
   socket.on('disconnect', () => {
     let partyId = socketIdPartyIdDictionary[socket.id];
-    if (partyId === undefined) {
+    if (partyId === undefined || parties[partyId] === undefined) {
       console.log(`An unknown user disconnected from socket ${socket.id}`);
       return;
     }
