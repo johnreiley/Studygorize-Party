@@ -4,17 +4,22 @@ import Socket from '../../services/SocketService';
 import LocalStorageService from '../../services/LocalStorageService';
 
 function Join(props) {
-  const [partyCode, setPartyCode] = useState(props.partyId);
-  const [name, setName] = useState(props.name);
+  const [partyCode, setPartyCode] = useState(LocalStorageService.getItem('partyId'));
+  const [name, setName] = useState(LocalStorageService.getItem('name'));
   const [showCodeWarning, setShowCodeWarning] = useState();
   const [showNameWarning, setShowNameWarning] = useState();
 
   useEffect(() => {
     Socket.on('partyNotExist', () => {
       // show warning
+      props.setModalTitle('Uh oh!');
+      props.setModalBody(`It looks like that party doesn't exist 🙁`);
+      props.setShowModal(true);
     });
     Socket.on('nameTaken', () => {
-      // show warning
+      props.setModalTitle('Oh no!');
+      props.setModalBody(`It looks like that name is already taken 😦\nTry something a little more unique!`);
+      props.setShowModal(true);
     });
 
     return () => {

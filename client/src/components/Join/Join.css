@@ -1,5 +1,5 @@
 .Join-container {
-  animation: slideInFromLeft 0.3s cubic-bezier(.27,.11,.38,.97);
+  animation: growAndFadeIn 0.3s cubic-bezier(.27,.11,.38,.97);
 }
 
 .Join-header {

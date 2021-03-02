@@ -1,10 +1,9 @@
 import './QuitBtn.css';
 import Socket from '../../services/SocketService';
 
-function QuitBtn(/*{ onClick }*/) {
+function QuitBtn() {
 
   function onQuit() {
-    // onClick();
     Socket.close();
   }
 

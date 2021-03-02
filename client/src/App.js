@@ -7,7 +7,7 @@ import WaitingRoom from './components/WaitingRoom/WaitingRoom';
 import QuitBtn from './components/QuitBtn/QuitBtn';
 import NameScorePanel from './components/NameScorePanel/NameScorePanel';
 import QuestionLoading from './components/QuestionLoading/QuestionLoading';
-
+import StatusModal from './components/StatusModal/StatusModal';
 
 function App() {
   const [isConnected, setIsConnected] = useState(false);
@@ -16,7 +16,20 @@ function App() {
   const [partyId, setPartyId] = useState(LocalStorageService.getItem('partyId'));
   const [score, setScore] = useState(null);
 
-  const initView = (<Join name={name} partyId={partyId} emitName={setName} emitPartyId={setPartyId} />)
+  const [showModal, setShowModal] = useState(false);
+  const [modalTitle, setModalTitle] = useState('');
+  const [modalBody, setModalBody] = useState('');
+
+  const initView = (
+    <Join 
+      name={name} 
+      partyId={partyId} 
+      emitName={setName} 
+      emitPartyId={setPartyId} 
+      setShowModal={setShowModal} 
+      setModalTitle={setModalTitle}
+      setModalBody={setModalBody} />
+  )
   const [view, setView] = useState(initView);
 
   useEffect(() => {
@@ -29,6 +42,14 @@ function App() {
       console.log(`Party ${partyId} joined!`)
     })
 
+    Socket.on('partyEnded', () => {
+      setIsConnected(false);
+      setModalTitle('Disconnected');
+      setModalBody('You were disconnected from the party because it ended 😥');
+      setShowModal(true);
+      setView(initView);
+    });
+
     Socket.on('disconnect', () => {
       console.log('DISCONNECTED');
       setIsConnected(false);
@@ -39,12 +60,14 @@ function App() {
 
     return () => {
       Socket.off('partyJoined');
+      Socket.off('partyEnded');
     }
   }, []);
 
   return (
     <div className="App">
       <div className="App-content">
+        <StatusModal title={modalTitle} body={modalBody} isOpen={showModal} setIsOpen={setShowModal} />
         {isConnected && 
           <QuitBtn />
         }
