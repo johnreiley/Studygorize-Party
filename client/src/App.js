@@ -50,6 +50,10 @@ function App() {
       setView(initView);
     });
 
+    Socket.on('questionLoading', () => {
+      setView(<QuestionLoading />)
+    });
+
     Socket.on('disconnect', () => {
       console.log('DISCONNECTED');
       setIsConnected(false);

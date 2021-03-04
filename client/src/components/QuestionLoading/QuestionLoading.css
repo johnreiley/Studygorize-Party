@@ -4,6 +4,7 @@
   width: 100%;
   height: fit-content;
   margin-top: 30vh;
+  animation: popIn 1s;
 }
 
 .spinner-border {
