@@ -118,18 +118,22 @@ export default function registerEvents(io: Server, socket: Socket) {
   /*******************************
    * QUESTION RESULT: from Host
    *******************************/
-  socket.on('questionResult', ({ uuid, isCorrect, score }) => {
-    let partyId = socketIdPartyIdDictionary[socket.id];
-    if (partyId) {
-      parties[partyId].state = PartyState.QuestionResult;
-      // find the user to send to
-      let user = parties[partyId].users.find(u => u.uuid === uuid);
-      io.to(user.socketId).emit('questionResult', { isCorrect, score });
-      // update the current user's score
-      user.score = score;
-    } else {
-      // to be taken out after testing
-      throw exception('ERROR: HOST HAD NO SOCKET ID ENTRY IN socketIdPartyIdDictionary!');
+  socket.on('questionResult', (questionResults: {uuid: string, isCorrect: boolean, score: number}[]) => {
+    for (let result of questionResults) {
+      let partyId = socketIdPartyIdDictionary[socket.id];
+      if (partyId) {
+        parties[partyId].state = PartyState.QuestionResult;
+        // find the user to send to
+        let user = parties[partyId].users.find(u => u.uuid === result.uuid);
+        console.log(user.name, " ", result.score);
+
+        io.to(user.socketId).emit('questionResult', { isCorrect: result.isCorrect, points: result.score });
+        // update the current user's score
+        user.score += result.score;
+      } else {
+        // to be taken out after testing
+        throw exception('ERROR: HOST HAD NO SOCKET ID ENTRY IN socketIdPartyIdDictionary!');
+      }
     }
   })
 
