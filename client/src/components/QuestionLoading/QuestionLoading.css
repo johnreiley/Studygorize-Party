@@ -10,7 +10,6 @@
 .spinner-border {
   width: 4em;
   height: 4em;
-  /* animation: spinner-border 2s linear infinite; */
   animation-duration: 2s;
   border-width: 0.8em;
 }

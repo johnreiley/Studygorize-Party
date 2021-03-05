@@ -9,6 +9,10 @@
   animation: slideInFromBottom 0.3s;
 }
 
+.NameScorePanel-score {
+  float: right;
+}
+
 @keyframes slideInFromBottom {
   0% {
     transform: translateY(100%);

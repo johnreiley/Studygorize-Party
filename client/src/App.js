@@ -7,14 +7,16 @@ import WaitingRoom from './components/WaitingRoom/WaitingRoom';
 import QuitBtn from './components/QuitBtn/QuitBtn';
 import NameScorePanel from './components/NameScorePanel/NameScorePanel';
 import QuestionLoading from './components/QuestionLoading/QuestionLoading';
+import QuestionOptions from './components/QuestionOptions/QuestionOptions';
 import StatusModal from './components/StatusModal/StatusModal';
+import QuestionResult from './components/QuestionResult/QuestionResult';
 
 function App() {
   const [isConnected, setIsConnected] = useState(false);
   const [uuid, setUuid] = useState(LocalStorageService.getItem('uuid'));
   const [name, setName] = useState(LocalStorageService.getItem('name'));
   const [partyId, setPartyId] = useState(LocalStorageService.getItem('partyId'));
-  const [score, setScore] = useState(null);
+  const [score, setScore] = useState(0);
 
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
@@ -54,6 +56,15 @@ function App() {
       setView(<QuestionLoading />)
     });
 
+    Socket.on('showOptions', (count) => {
+      setView(<QuestionOptions count={count} />);
+    })
+
+    Socket.on('questionResult', ({isCorrect, points}) => {
+      addToScore(points);
+      setView(<QuestionResult isCorrect={isCorrect} score={points} />)
+    });
+
     Socket.on('disconnect', () => {
       console.log('DISCONNECTED');
       setIsConnected(false);
@@ -67,6 +78,10 @@ function App() {
       Socket.off('partyEnded');
     }
   }, []);
+
+  function addToScore(points) {
+    setScore(score + points);
+  }
 
   return (
     <div className="App">

@@ -1,0 +1,32 @@
+.QuestionResult-container {
+    z-index: 0;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+}
+
+.QuestionResult-text,
+.QuestionResult-points,
+.QuestionResult-icon .material-icons {
+  color: #fff;
+}
+
+.QuestionResult-text {
+  font-size: calc(2vw + 40px);
+}
+
+.QuestionResult-points {
+  margin-top: 2em;
+  font-size: larger;
+  font-weight: bold;
+}
+
+.QuestionResult-icon .material-icons {
+  font-size: calc(2vw + 72px);
+}
