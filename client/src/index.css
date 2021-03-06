@@ -43,6 +43,22 @@ code {
   --green: #349c28;
 }
 
+.text-red {
+  color: var(--red);
+}
+.text-purple {
+  color: var(--purple);
+}
+.text-yellow {
+  color: var(--yellow);
+}
+.text-green {
+  color: var(--green);
+}
+.text-gray {
+  color: lightgray;
+}
+
 /************ FORMS *************/
 label {
   font-size: larger;

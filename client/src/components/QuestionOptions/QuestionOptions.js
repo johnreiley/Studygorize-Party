@@ -1,27 +1,41 @@
 import './QuestionOptions.css';
+import { useState } from 'react';
 import Socket from '../../services/SocketService';
+import QuestionOption from './QuestionOption/QuestionOption';
 
 function QuestionOptions({count}) {
+  const [selectedOption, setSelectedOption] = useState(undefined);
   const letters = [
     'A', 'B', 'C', 'D'
+  ];
+  const colors = [
+    'red', 'purple', 'green', 'yellow'
   ];
 
   function onSubmit(e) {
     e.preventDefault();
-    let value = e.currentTarget.value;
+    let value = parseInt(e.currentTarget.value);
+    setSelectedOption(value);
     Socket.emit('selectOption', value);
-    console.log('SELECTED: ', letters[value]);
-    // disable the other buttons
   }
 
   let options = [];
+  console.log(selectedOption);
   for (let i = 0; i < count; i++) {
-    options.push(<button onClick={onSubmit} value={i}>{letters[i]}</button>);  
+    options.push(<QuestionOption 
+      onClick={onSubmit} 
+      value={i} 
+      letter={letters[i]} 
+      color={(selectedOption === undefined || selectedOption === i) ? colors[i] : 'gray'} 
+      disabled={selectedOption !== undefined} />
+    );  
   }
   
   return (
-    <div>
-      {options}
+    <div className="QuestionOptions-container">
+      <div className="QuestionOptions-options-container">
+        {options}
+      </div>
     </div>
   )
 }
