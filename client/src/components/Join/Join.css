@@ -1,4 +1,5 @@
 .Join-container {
+  margin: 0 1em;
   animation: growAndFadeIn 0.3s cubic-bezier(.27,.11,.38,.97);
 }
 
@@ -11,10 +12,19 @@
     margin: 0;
   }
 
+.Join-footer {
+  margin: auto;
+  max-width: 300px;
+}
+
 #joinForm {
   margin: auto;
   padding: 1em;
   max-width: 360px;
+}
+
+#partyCodeLabel, #nameLabel {
+  width: 100%;
 }
 
 #partyCodeInput, #nameInput {

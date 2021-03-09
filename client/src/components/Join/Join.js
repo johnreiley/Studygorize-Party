@@ -57,7 +57,7 @@ function Join(props) {
       <div className="row">
         <form onSubmit={onSubmit} id="joinForm">
           <div className="form-group">
-            <label htmlFor="partyCodeInput" className="text-light">Party Code</label>
+            <label htmlFor="partyCodeInput" id="partyCodeLabel" className="text-light">Party Code</label>
             <input onChange={e => setPartyCode(e.target.value)} 
               value={partyCode}
               type="text" 
@@ -65,6 +65,7 @@ function Join(props) {
               className="form-control text-uppercase" 
               maxLength="4" 
               placeholder="enter 4-letter code"
+              autoComplete="off"
               required
               />
             {showCodeWarning &&
@@ -74,7 +75,7 @@ function Join(props) {
             }
           </div>
           <div className="form-group">
-            <label htmlFor="nameInput" className="text-light">Name</label>
+            <label htmlFor="nameInput" id="nameLabel" className="text-light">Name</label>
             <input onChange={e => setName(e.target.value)} 
               value={name}
               type="text" 
@@ -94,7 +95,7 @@ function Join(props) {
         </form>
       </div>
       <div className="row">
-        <footer className="text-light text-center">
+        <footer className="Join-footer text-light text-center">
           Create your own Studygorize account at
           <strong><a className="text-light" href="https://studygorize.web.app" target="_blank"> studygorize.web.app</a></strong>
         </footer>

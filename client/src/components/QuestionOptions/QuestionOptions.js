@@ -20,7 +20,6 @@ function QuestionOptions({count}) {
   }
 
   let options = [];
-  console.log(selectedOption);
   for (let i = 0; i < count; i++) {
     options.push(<QuestionOption 
       onClick={onSubmit} 

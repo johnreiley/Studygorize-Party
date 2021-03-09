@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './App.css';
 import Socket from './services/SocketService';
 import LocalStorageService from './services/LocalStorageService';
@@ -21,6 +21,10 @@ function App() {
   const [showModal, setShowModal] = useState(false);
   const [modalTitle, setModalTitle] = useState('');
   const [modalBody, setModalBody] = useState('');
+
+  const scoreRef = useRef();
+
+  scoreRef.current = score;
 
   const initView = (
     <Join 
@@ -60,15 +64,13 @@ function App() {
       setView(<QuestionOptions count={count} />);
     })
 
-    Socket.on('questionResult', ({isCorrect, points}) => {
-      addToScore(points);
-      setView(<QuestionResult isCorrect={isCorrect} score={points} />)
-    });
+    Socket.on('questionResult', handleQuestionResult);
 
     Socket.on('disconnect', () => {
       console.log('DISCONNECTED');
       setIsConnected(false);
       setPartyId(LocalStorageService.getItem('partyId'));
+      setScore(0);
       setView(initView);
       Socket.connect();
     })
@@ -79,12 +81,13 @@ function App() {
     }
   }, []);
 
-  function addToScore(points) {
-    setScore(score + points);
+  function handleQuestionResult({isCorrect, points}) {
+    setScore(scoreRef.current + points);
+    setView(<QuestionResult isCorrect={isCorrect} score={points} />)
   }
 
   return (
-    <div className="App">
+    <div className="App bg-primary">
       <div className="App-content">
         <StatusModal title={modalTitle} body={modalBody} isOpen={showModal} setIsOpen={setShowModal} />
         {isConnected && 
