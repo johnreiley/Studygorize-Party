@@ -19,12 +19,11 @@ const io = new Server(http, OPTIONS);
 
 app.use('/static', express.static(path.join(__dirname, '../../client/build//static')));
 app.get('*', (req: Request, res: Response) => {
-  console.log(__dirname)
   res.sendFile('index.html', {root: path.join(__dirname, '../../client/build/')});
 });
 
 io.on('connection', (socket: Socket) => {
-  console.log(`a user connected at socket ${socket.id}`);
+  console.log(`A user connected at socket ${socket.id}`);
   registerEvents(io, socket);
 })
 

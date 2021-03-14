@@ -1,3 +1,4 @@
 interface Host {
-  uuid: string
+  uuid: string,
+  socketId: string
 }
