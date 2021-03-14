@@ -50,6 +50,7 @@ function App() {
 
     Socket.on('partyEnded', () => {
       setIsConnected(false);
+      setScore(0);
       setModalTitle('Disconnected');
       setModalBody('You were disconnected from the party because it ended 😥');
       setShowModal(true);

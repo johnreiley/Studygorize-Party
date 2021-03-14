@@ -22,8 +22,8 @@
 }
 
 .QuestionResult-points {
-  margin-top: 2em;
-  font-size: larger;
+  margin-top: 25px;
+  font-size: calc(2vw + 18px);
   font-weight: bold;
 }
 

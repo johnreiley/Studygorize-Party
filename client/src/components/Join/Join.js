@@ -30,16 +30,16 @@ function Join(props) {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    let valid = true;
+    let isValid = true;
     if (partyCode.length < 4) {
       setShowCodeWarning(true);
-      valid = false;
+      isValid = false;
     }
     if (name.length < 1) {
       setShowNameWarning(true);
-      valid = false;
+      isValid = false;
     }
-    if (valid) {
+    if (isValid) {
       Socket.emit('joinParty', { name, partyId: partyCode });
       LocalStorageService.setItem('name', name);
       props.emitName(name);
