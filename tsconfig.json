@@ -16,5 +16,8 @@
   },
   "include": [
       "server/src/**/*"
+, "typings"  ],
+  "typeRoots": [
+      "./node_modules/@types"
   ]
 }
