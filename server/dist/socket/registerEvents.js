@@ -50,6 +50,7 @@ function registerEvents(io, socket) {
             socket.emit('nameTaken');
             return;
         }
+        console.log(`Connecting user to party: ${partyId}`);
         const user = {
             uuid: uuid_1.v4(),
             socketId: socket.id,

@@ -8,6 +8,7 @@ function Join(props) {
   const [name, setName] = useState(LocalStorageService.getItem('name'));
   const [showCodeWarning, setShowCodeWarning] = useState();
   const [showNameWarning, setShowNameWarning] = useState();
+  const [showSpinner, setShowSpinner] = useState(false);
 
   useEffect(() => {
     Socket.on('partyNotExist', () => {
@@ -40,6 +41,11 @@ function Join(props) {
       isValid = false;
     }
     if (isValid) {
+      setShowSpinner(true);
+      console.log("Connected:", Socket.connected);
+      if (Socket.disconnected) {
+        Socket.connect();
+      }
       Socket.emit('joinParty', { name, partyId: partyCode });
       LocalStorageService.setItem('name', name);
       props.emitName(name);
@@ -91,7 +97,10 @@ function Join(props) {
               </div>
             }
           </div>
-          <button type="submit" id="joinBtn" className="btn btn-light">Join</button>
+          <button type="submit" id="joinBtn" className="btn btn-light">
+            {showSpinner && <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>}
+            {!showSpinner && <span>Join</span>}
+          </button>
         </form>
       </div>
       <div className="row">

@@ -56,6 +56,8 @@ export default function registerEvents(io: Server, socket: Socket) {
       return;
     }
 
+    console.log(`Connecting user to party: ${partyId}`);
+
     const user = {
       uuid: uuidv4(),
       socketId: socket.id,
