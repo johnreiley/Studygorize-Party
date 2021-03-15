@@ -14,6 +14,13 @@ if (process.env.NODE_ENV !== 'production') {
       methods: ["GET", "POST"]
     }
   };
+} else {
+  OPTIONS = {
+    cors: {
+      origin: "https://studygorize.web.app",
+      methods: ["GET", "POST"]
+    }
+  };
 }
 const io = new Server(http, OPTIONS);
 

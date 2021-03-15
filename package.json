@@ -2,7 +2,7 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "server/dist/index.js",
   "dependencies": {
     "express": "^4.17.1",
     "randomatic": "^3.1.1",
