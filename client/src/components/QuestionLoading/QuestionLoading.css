@@ -7,7 +7,7 @@
   animation: popIn 1s;
 }
 
-.spinner-border {
+.spinner-custom {
   width: 4em;
   height: 4em;
   animation-duration: 2s;
