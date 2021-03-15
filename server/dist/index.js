@@ -9,7 +9,7 @@ const path_1 = __importDefault(require("path"));
 const registerEvents_1 = __importDefault(require("./socket/registerEvents"));
 let OPTIONS = {};
 const app = express_1.default();
-const server = require('http').Server(app);
+const http = require('http').createServer(app);
 if (process.env.NODE_ENV !== 'production') {
     OPTIONS = {
         cors: {
@@ -26,7 +26,7 @@ else {
         }
     };
 }
-const io = new socket_io_1.Server(server, OPTIONS);
+const io = new socket_io_1.Server(http, OPTIONS);
 app.use('/static', express_1.default.static(path_1.default.join(__dirname, '../../client/build//static')));
 app.get('*', (req, res) => {
     res.sendFile('index.html', { root: path_1.default.join(__dirname, '../../client/build/') });
@@ -36,7 +36,7 @@ io.on('connection', (socket) => {
     registerEvents_1.default(io, socket);
 });
 const PORT = process.env.PORT || 8080;
-server.listen(PORT, () => {
+http.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}...`);
 });
 //# sourceMappingURL=index.js.map
