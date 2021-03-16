@@ -5,4 +5,18 @@
   font-size: 72px;
   border-radius: 10px;
   box-shadow: 0 10px 15px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.3s;
+  outline: none;
+}
+
+.QuestionOption:active {
+  outline: none;
+}
+
+.selected {
+  transform: scale(1.05);
+}
+
+.unselected {
+  transform: scale(0.95);
 }
