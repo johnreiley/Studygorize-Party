@@ -16,11 +16,13 @@ function Join(props) {
       props.setModalTitle('Uh oh!');
       props.setModalBody(`It looks like that party doesn't exist 🙁`);
       props.setShowModal(true);
+      setShowSpinner(false);
     });
     Socket.on('nameTaken', () => {
       props.setModalTitle('Oh no!');
       props.setModalBody(`It looks like that name is already taken 😦\nTry something a little more unique!`);
       props.setShowModal(true);
+      setShowSpinner(false);
     });
 
     return () => {
@@ -98,7 +100,7 @@ function Join(props) {
             }
           </div>
           <button type="submit" id="joinBtn" className="btn btn-light">
-            {showSpinner && <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>}
+            {showSpinner && <span class="join-spinner spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>}
             {!showSpinner && <span>Join</span>}
           </button>
         </form>

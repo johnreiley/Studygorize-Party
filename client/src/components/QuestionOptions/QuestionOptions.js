@@ -25,7 +25,8 @@ function QuestionOptions({count}) {
       onClick={onSubmit} 
       value={i} 
       letter={letters[i]} 
-      color={(selectedOption === undefined || selectedOption === i) ? colors[i] : 'gray'} 
+      color={(selectedOption === undefined || selectedOption === i) ? colors[i] : 'gray'}
+      isSelected={selectedOption === i} 
       disabled={selectedOption !== undefined} />
     );  
   }
