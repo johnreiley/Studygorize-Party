@@ -10,6 +10,7 @@ import QuestionLoading from './components/QuestionLoading/QuestionLoading';
 import QuestionOptions from './components/QuestionOptions/QuestionOptions';
 import StatusModal from './components/StatusModal/StatusModal';
 import QuestionResult from './components/QuestionResult/QuestionResult';
+import PartyResults from './components/PartyResults/PartyResults';
 
 function App() {
   const [isConnected, setIsConnected] = useState(false);
@@ -66,6 +67,10 @@ function App() {
     })
 
     Socket.on('questionResult', handleQuestionResult);
+
+    Socket.on('partyResults', (score) => {
+      setView(<PartyResults score={score} />);
+    })
 
     Socket.on('disconnect', () => {
       console.log('DISCONNECTED');
