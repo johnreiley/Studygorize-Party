@@ -70,6 +70,7 @@ function App() {
 
     Socket.on('partyResults', (score) => {
       setView(<PartyResults score={score} />);
+      setScore(0);
     })
 
     Socket.on('disconnect', () => {
