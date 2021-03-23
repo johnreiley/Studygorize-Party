@@ -49,6 +49,14 @@ function App() {
       console.log(`Party ${partyId} joined!`)
     })
 
+    Socket.on('partyRejoined', ({name, score}) => {
+      setScore(score);
+      setName(name);
+      LocalStorageService.setItem('name', name);
+      setIsConnected(true);
+      setView(<WaitingRoom />)
+    });
+
     Socket.on('partyEnded', () => {
       setIsConnected(false);
       setScore(0);
@@ -84,7 +92,13 @@ function App() {
 
     return () => {
       Socket.off('partyJoined');
+      Socket.off('partyRejoined');
       Socket.off('partyEnded');
+      Socket.off('questionLoading');
+      Socket.off('showOptions');
+      Socket.off('questionResult');
+      Socket.off('partyResults');
+      Socket.off('disconnect');
     }
   }, []);
 

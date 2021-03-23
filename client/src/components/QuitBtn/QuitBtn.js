@@ -4,6 +4,7 @@ import Socket from '../../services/SocketService';
 function QuitBtn() {
 
   function onQuit() {
+    Socket.emit('leaveParty');
     Socket.close();
   }
 
