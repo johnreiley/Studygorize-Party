@@ -1,9 +1,12 @@
 import './QuitBtn.css';
 import Socket from '../../services/SocketService';
+import LocalStorageService from '../../services/LocalStorageService';
 
 function QuitBtn() {
 
   function onQuit() {
+    LocalStorageService.removeItem('uuid');
+    Socket.emit('leaveParty');
     Socket.close();
   }
 
