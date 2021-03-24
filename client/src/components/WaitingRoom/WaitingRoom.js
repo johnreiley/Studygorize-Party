@@ -1,14 +1,10 @@
-import QuitBtn from "../QuitBtn/QuitBtn"
-
 import './WaitingRoom.css';
 
-function WaitingRoom() {
+function WaitingRoom({title, message}) {
   return (
     <div className="WaitingRoom">
-      <h2 className="theme-font">You're in!</h2>
-      <span>
-        Waiting for the party to start...
-      </span>
+      <h2 className="theme-font">{title}</h2>
+      <span>{message}</span>
     </div>
   )
 }

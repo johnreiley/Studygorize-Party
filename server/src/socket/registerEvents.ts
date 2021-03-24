@@ -66,11 +66,27 @@ export default function registerEvents(io: Server, socket: Socket) {
     }
     parties[partyId].users.push(user);
 
-    // uuidPartyIdDictionary[user.uuid] = partyId;
+    uuidPartyIdDictionary[user.uuid] = partyId;
     socketIdPartyIdDictionary[socket.id] = partyId;
     socket.join(partyId);
     socket.emit('partyJoined', { partyId, uuid: user.uuid })
     io.to(parties[partyId].host.socketId).emit('userJoined', user);
+  });
+
+  /*******************************
+   * JOIN PARTY: from Client
+   *******************************/
+  socket.on('rejoinParty', (uuid) => {
+    let partyId = uuidPartyIdDictionary[uuid];
+    if (partyId === undefined || parties[partyId] === undefined) {
+      socket.emit('uuidNotExist');
+      return;
+    }
+    let user = parties[partyId].users.find(u => u.uuid === uuid);
+    user.socketId = socket.id;
+    socketIdPartyIdDictionary[socket.id] = partyId;
+    socket.join(partyId);
+    socket.emit('partyRejoined', {name: user.name, score: user.score});
   });
 
   /*******************************
@@ -156,6 +172,22 @@ export default function registerEvents(io: Server, socket: Socket) {
   })
 
   /*******************************
+   * LEAVE PARTY: from Client
+   *******************************/
+  socket.on('leaveParty', () => {
+    let partyId = socketIdPartyIdDictionary[socket.id];
+    
+    // find the user and remove them
+    let user = parties[partyId].users.find(u => u.socketId === socket.id);
+    if (user !== undefined) {
+      socket.to(parties[partyId].host.uuid).emit('userLeft', user.uuid);
+      let index = parties[partyId].users.indexOf(user);
+      parties[partyId].users.splice(index, 1);
+    }
+    delete uuidPartyIdDictionary[partyId];
+  });
+
+  /*******************************
    * DISCONNECT
    *******************************/
   socket.on('disconnect', () => {
@@ -165,19 +197,14 @@ export default function registerEvents(io: Server, socket: Socket) {
       return;
     }
 
-    // find the user and remove them
-    let user = parties[partyId].users.find(u => u.socketId === socket.id);
-    if (user !== undefined) {
-      socket.to(parties[partyId].host.uuid).emit('userLeft', user.uuid);
-      let index = parties[partyId].users.indexOf(user);
-      parties[partyId].users.splice(index, 1);
-    }
     // remove the host and delete the party 
-    else if (parties[partyId].host.socketId === socket.id) {
+    if (parties[partyId].host.socketId === socket.id || parties[partyId].users.length === 0) {
       socket.to(partyId).emit('partyEnded');
       delete parties[partyId];
       console.log(`Party with partyId of ${partyId} ended`)
       console.log(`A host disconnected from socket ${socket.id}`);
+    } else {
+      console.log(`User timedout from socket ${socket.id}`);
     }
     delete socketIdPartyIdDictionary[socket.id];
   });

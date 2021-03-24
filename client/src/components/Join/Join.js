@@ -11,6 +11,11 @@ function Join(props) {
   const [showSpinner, setShowSpinner] = useState(false);
 
   useEffect(() => {
+    let uuid = LocalStorageService.getItem('uuid');
+    if (uuid !== null) {
+      Socket.emit('rejoinParty', uuid);
+    }
+
     Socket.on('partyNotExist', () => {
       // show warning
       props.setModalTitle('Uh oh!');
@@ -25,9 +30,15 @@ function Join(props) {
       setShowSpinner(false);
     });
 
+    Socket.on('uuidNotExist', () => {
+      LocalStorageService.removeItem('uuid');
+      setShowSpinner(false);
+    });
+
     return () => {
       Socket.off('partyNotExist');
       Socket.off('nameTaken');
+      Socket.off('uuidNotExist');
     }
   }, []);
 
@@ -48,10 +59,15 @@ function Join(props) {
       if (Socket.disconnected) {
         Socket.connect();
       }
-      Socket.emit('joinParty', { name, partyId: partyCode });
-      LocalStorageService.setItem('name', name);
-      props.emitName(name);
-      props.emitPartyId(partyCode);
+      let uuid = LocalStorageService.getItem('uuid');
+      if (uuid !== null) {
+        Socket.emit('rejoinParty', uuid);
+      } else {
+        Socket.emit('joinParty', { name, partyId: partyCode });
+        LocalStorageService.setItem('name', name);
+        props.emitName(name);
+        props.emitPartyId(partyCode);
+      }
     }
   }
 
