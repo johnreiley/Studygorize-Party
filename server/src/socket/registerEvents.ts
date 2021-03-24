@@ -78,13 +78,14 @@ export default function registerEvents(io: Server, socket: Socket) {
    *******************************/
   socket.on('rejoinParty', (uuid) => {
     let partyId = uuidPartyIdDictionary[uuid];
-    if (partyId === undefined) {
+    if (partyId === undefined || parties[partyId] === undefined) {
       socket.emit('uuidNotExist');
       return;
     }
     let user = parties[partyId].users.find(u => u.uuid === uuid);
     user.socketId = socket.id;
     socketIdPartyIdDictionary[socket.id] = partyId;
+    socket.join(partyId);
     socket.emit('partyRejoined', {name: user.name, score: user.score});
   });
 
@@ -197,11 +198,13 @@ export default function registerEvents(io: Server, socket: Socket) {
     }
 
     // remove the host and delete the party 
-    if (parties[partyId].host.socketId === socket.id) {
+    if (parties[partyId].host.socketId === socket.id || parties[partyId].users.length === 0) {
       socket.to(partyId).emit('partyEnded');
       delete parties[partyId];
       console.log(`Party with partyId of ${partyId} ended`)
       console.log(`A host disconnected from socket ${socket.id}`);
+    } else {
+      console.log(`User timedout from socket ${socket.id}`);
     }
     delete socketIdPartyIdDictionary[socket.id];
   });

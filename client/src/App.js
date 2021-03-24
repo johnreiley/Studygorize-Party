@@ -45,7 +45,7 @@ function App() {
       LocalStorageService.setItem('partyId', partyId);
       LocalStorageService.setItem('uuid', uuid);
       setIsConnected(true);
-      setView(<WaitingRoom />)
+      setView(<WaitingRoom title="You're in!" message="Waiting for the party to start..." />)
       console.log(`Party ${partyId} joined!`)
     })
 
@@ -54,7 +54,7 @@ function App() {
       setName(name);
       LocalStorageService.setItem('name', name);
       setIsConnected(true);
-      setView(<WaitingRoom />)
+      setView(<WaitingRoom title="You're back in!" message="Waiting for the next question..." />)
     });
 
     Socket.on('partyEnded', () => {
@@ -64,6 +64,8 @@ function App() {
       setModalBody('You were disconnected from the party because it ended 😥');
       setShowModal(true);
       setView(initView);
+      LocalStorageService.removeItem('partyId');
+      LocalStorageService.removeItem('uuid');
     });
 
     Socket.on('questionLoading', () => {
