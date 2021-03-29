@@ -75,7 +75,8 @@ function Join(props) {
     <div className="Join-container">
       <div className="row">
         <div className="Join-header">
-          <h1 className="theme-font text-light">Studygorize Party</h1>
+          {/* <img src="./assets/studygorize-icon.png" alt=""/> */}
+          <h1 className="site-header theme-font text-light">Studygorize Party</h1>
         </div>
       </div>
       <div className="row">
